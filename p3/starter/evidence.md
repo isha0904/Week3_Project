@@ -1,10 +1,10 @@
 # P3 evidence record (keep it short)
 
-Pair / personal branch: ______  (synthetic identifiers only, e.g. p3-team-a)
+Pair / personal branch: p3-isha  (synthetic identifiers only, e.g. p3-team-a)
 
 | Milestone | Commit | Command(s) run | Actual result | Observed / unverified |
 |---|---|---|---|---|
-| Baseline (`make test CANDIDATE=project/game`) | | | e.g. 29 supplied adapter checks pass | |
+| Baseline (`make test CANDIDATE=project/game`) | 1468c10 (game code unchanged since) | `python lab.py test --candidate project/game` (Windows, from `w3-10/`) | 29 tests, 29 pass, 0 fail — "PASS supplied adapter checks" | Observed 2026-11-26 |
 | Refactor: interface + normal/boundary tests | | | | |
 | Hint integrated (state unchanged after advice) | | | | |
 | Peer trace browser → adapter → validator → display | | | | |
