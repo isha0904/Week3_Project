@@ -1,0 +1,17 @@
+# Build output and dependencies
+node_modules/
+dist/
+run/
+attempts/
+test-results/
+playwright-report/
+
+# Course documents (kept locally, not published to the public repo)
+*.docx
+*.pptx
+*.pdf
+
+# OS / OneDrive
+desktop.ini
+Thumbs.db
+.DS_Store
