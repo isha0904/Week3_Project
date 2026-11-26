@@ -7,10 +7,10 @@ Copy this file into your working notes. Mark every runtime observation as **obse
 
 | Field | Your answer |
 |---|---|
-| Game | |
-| Player objective | |
-| One advice question (observable answer) | e.g. "Which permitted move can I try next?" |
-| One example of useful advice (state + suggestion + why it helps) | |
+| Game | Treasure Hunt (reference 3×3 board: start (0,0), wall (1,1), treasure t1 at (2,0) worth 10, exit (2,2)) |
+| Player objective | Collect treasure t1 and reach the exit before the 6-move budget runs out |
+| One advice question (observable answer) | "Which permitted move should I make next to get to the treasure?" — answer is exactly one direction from the server-derived permitted list |
+| One example of useful advice (state + suggestion + why it helps) | State (0,0), 6 moves, collected [], playing → suggest **east**. Why: east, east collects t1 at (2,0) in 2 moves, then south, south reaches the exit in 4 total (2 spare). Going south first reaches the exit without t1, and collecting it from there needs 7 moves > 6, so that route cannot win. |
 
 ## 2. Boundary (10 min)
 
