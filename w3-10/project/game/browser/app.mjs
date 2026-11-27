@@ -1,5 +1,6 @@
 // Supplied browser hint flow. Moves are applied locally by the rule evaluator; advice is display data.
-import { evaluate, initialState, REFERENCE_BOARD } from '/dist/rules.js';
+import { allowedActions, evaluate, initialState, REFERENCE_BOARD } from '/dist/rules.js';
+import { describeMoves } from '/dist/presentation.js'; // P3 owned presentation component
 import { askForHint } from './client.mjs';
 
 const board = REFERENCE_BOARD;
@@ -28,11 +29,20 @@ function render(message) {
   $('#board').innerHTML = rows.join('');
   $('#state').textContent = JSON.stringify(state);
   $('#status').textContent = `Status: ${state.status} | moves remaining: ${state.movesRemaining} | score: ${state.score}`;
+  const view = describeMoves(allowedActions(board, state), null); // display only; never applies a move
+  $('#allowed').textContent = view.allowed.length === 0
+    ? 'Allowed moves: none.'
+    : `Allowed moves: ${view.allowed.join(', ')} (blocked: ${view.blocked.join(', ') || 'none'})`;
   if (message !== undefined) $('#message').textContent = message;
 }
 
 function showAdvice(text) {
   $('#advice').textContent = text;
+}
+
+// Why the displayed hint is permitted, for the state the hint was requested for.
+function showWhy(text) {
+  $('#why').textContent = text;
 }
 
 // Only the player's move action invokes the rule evaluator to update state.
@@ -41,6 +51,7 @@ function move(direction) {
   if (result.accepted) {
     state = result.state;
     stateVersion += 1;
+    showWhy(''); // the explanation belonged to the previous state
   }
   render(result.accepted ? `Moved ${direction}.` : `Rejected (${result.reason}); state unchanged.`);
 }
@@ -50,6 +61,7 @@ function reset() {
   stateVersion += 1;
   render('New game.');
   showAdvice('');
+  showWhy('');
 }
 
 // Optional lab controls (W3.09 scenario and wait) are sent only when the page provides them.
@@ -64,6 +76,7 @@ async function onHint() {
   const snapshot = structuredClone(state); // copy at request time
   hintButton.disabled = true;
   showAdvice('Loading advice...');
+  showWhy('');
   try {
     const envelope = await askForHint({ boardId: board.id, state: snapshot, stateVersion: version, control: controls() });
     if (version !== stateVersion) {
@@ -75,6 +88,8 @@ async function onHint() {
     } else {
       showAdvice(`Suggested: ${envelope.hint.action.direction} - ${envelope.hint.explanation} (source: ${envelope.source}, request ID: ${envelope.requestId})`);
     }
+    // Explained against the snapshot the hint was requested for (unchanged, as checked above).
+    showWhy(describeMoves(allowedActions(board, snapshot), envelope.hint).reason);
   } catch {
     showAdvice('Advice unavailable; keep playing.');
   } finally {
